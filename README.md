@@ -8,6 +8,7 @@ A fast, lightweight, and scalable URL shortener service built with Go (Golang). 
 - **Fast Redirections:** Utilizes Redis caching to serve recently accessed short URLs with minimal latency.
 - **Persistent Storage:** Stores all URL mappings in MongoDB.
 - **Cache Fallback Strategy:** On cache miss, retrieves the URL from MongoDB and repopulates the Redis cache.
+- **Rate Limiting:** Protects endpoints from abuse using an in-memory Token Bucket algorithm (per IP address).
 - **Standard Library HTTP:** Built using Go's lightweight and robust `net/http` standard library.
 
 ## Architecture
@@ -120,6 +121,8 @@ You can easily test the API endpoints using Postman:
 url_shorterner_m/
 ├── handlers/      # HTTP handlers (Controller layer)
 │   └── url_handler.go
+├── middleware/    # HTTP middlewares (e.g., Rate Limiter)
+│   └── rate_limiter.go
 ├── models/        # Database models & structures
 │   └── url_model.go
 ├── services/      # Business logic (Shortening, caching strategies)
