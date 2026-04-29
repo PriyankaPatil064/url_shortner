@@ -1,4 +1,4 @@
-# URL Shortener (url_shortner)
+# URL Shortener (url_shortener)
 
 A fast, lightweight, and scalable URL shortener service built with Go (Golang). It uses **MongoDB** as the primary database for persistent storage and **Redis** as an in-memory cache to ensure rapid redirections.
 
