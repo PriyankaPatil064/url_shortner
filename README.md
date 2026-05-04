@@ -20,39 +20,67 @@ A fast, lightweight, and scalable URL shortener service built with Go (Golang). 
    - If found (**Cache Hit**), it redirects immediately.
    - If not found (**Cache Miss**), it fetches from **MongoDB**, updates the **Redis** cache, and then redirects.
 
-## Prerequisites
+## Prerequisites & Installation
 
-Before running the application, ensure you have the following installed and running:
+Before running the application, ensure you have **Go**, **MongoDB**, and **Redis** installed and running on your system. 
 
-- **Go** (Version 1.25.1 or newer)
-- **MongoDB** (Running on `localhost:27017`)
-- **Redis** (Running on `localhost:6379`)
+### For Mac (macOS)
+The easiest way to install dependencies on a Mac is using [Homebrew](https://brew.sh/).
 
-## Setup & Installation
-
-1. **Clone the repository** (if applicable) or navigate to the project directory:
+1. **Install Go:**
    ```bash
-   cd path/to/url_shorterner_m
+   brew install go
+   ```
+2. **Install & Start Redis:**
+   ```bash
+   brew install redis
+   brew services start redis
+   ```
+3. **Install & Start MongoDB:**
+   ```bash
+   brew tap mongodb/brew
+   brew install mongodb-community
+   brew services start mongodb-community
    ```
 
-2. **Download dependencies:**
-   ```bash
-   go mod tidy
-   ```
+### For Windows
+1. **Install Go:** Download and install from the [official Go website](https://go.dev/dl/).
+2. **Install MongoDB:** Download and install the [MongoDB Community Server](https://www.mongodb.com/try/download/community). Ensure the MongoDB service is started.
+3. **Install Redis:** The recommended way to run Redis on Windows is via [WSL (Windows Subsystem for Linux)](https://learn.microsoft.com/en-us/windows/wsl/install). 
+   - Open your WSL terminal (e.g., Ubuntu).
+   - Run `sudo apt update && sudo apt install redis-server`.
+   - Start the service: `sudo service redis-server start`.
+   - *(Alternatively, you can use Docker or Memurai).*
 
-3. **Ensure your databases are running.**
-   - MongoDB should be accessible at `mongodb://localhost:27017`.
-   - Redis should be accessible at `localhost:6379`.
+## Step-by-Step Guide to Run the Project
 
-## Running the Application
+Follow these steps clearly to get the project running locally:
 
-Start the server by running:
+### Step 1: Clone the repository
+Open your terminal and clone the project:
+```bash
+git clone https://github.com/PriyankaPatil064/url_shortner.git
+cd url_shorterner_m
+```
 
+### Step 2: Download dependencies
+Fetch all required Go modules:
+```bash
+go mod tidy
+```
+
+### Step 3: Verify Databases are Running
+Ensure your local databases are active:
+- **MongoDB:** Accessible at `mongodb://localhost:27017`
+- **Redis:** Accessible at `localhost:6379`
+
+### Step 4: Run the Application
+Start the Go server:
 ```bash
 go run main.go
 ```
 
-The server will start and listen on port `8080`.
+The server will start and listen on port `8080`. You should see the following success output in your terminal:
 
 ```text
 ✅ Connected to MongoDB
