@@ -68,18 +68,15 @@ func RateLimiter(next http.Handler) http.Handler {
 		ip := getIP(r)
 
 		mu.Lock()
-
 		bucket, exists := buckets[ip]
 		if !exists {
-			bucket = NewTokenBucket(4, 1) // strict test config
+			bucket = NewTokenBucket(4, 0)
 			buckets[ip] = bucket
 		}
-
-		allowed := bucket.Allow() // ✅ move inside lock
-
 		mu.Unlock()
 
-		if !allowed {
+		// ✅ call outside lock
+		if !bucket.Allow() {
 			fmt.Println("❌ Rate limit exceeded for:", ip)
 			http.Error(w, "Too Many Requests", http.StatusTooManyRequests)
 			return
@@ -89,3 +86,4 @@ func RateLimiter(next http.Handler) http.Handler {
 		next.ServeHTTP(w, r)
 	})
 }
+
