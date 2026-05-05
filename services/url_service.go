@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"fmt"
 	"url_shorterner_m/models"
 	"url_shorterner_m/storage"
 	"url_shorterner_m/utils"
@@ -9,17 +10,28 @@ import (
 
 // CREATE
 func CreateShortURL(longURL string) string {
-	shortCode := utils.GenerateShortCode(8)
+
+	// Step 1: Generate unique ID using Redis
+	id, err := storage.RedisClient.Incr(storage.Ctx, "url_counter").Result()
+	if err != nil {
+		return ""
+	}
+
+	// Step 2: Convert ID → Base62
+	shortCode := utils.EncodeBase62(id)
 
 	url := models.URL{
 		ShortCode: shortCode,
 		LongURL:   longURL,
 	}
 
-	// Save in MongoDB
-	storage.URLCollection.InsertOne(context.Background(), url)
+	// Step 3: Store in MongoDB
+	_, err = storage.URLCollection.InsertOne(context.Background(), &url)
+	if err != nil {
+		fmt.Printf("❌ MongoDB Insert Error: %v\n", err)
+	}
 
-	// Save in Redis (cache)
+	// Step 4: Cache in Redis
 	storage.RedisClient.Set(storage.Ctx, shortCode, longURL, 0)
 
 	return shortCode
@@ -28,13 +40,13 @@ func CreateShortURL(longURL string) string {
 // READ
 func GetLongURL(shortCode string) (string, bool) {
 
-	// 🔥 1. Check Redis first
+	// 1. Check Redis
 	longURL, err := storage.RedisClient.Get(storage.Ctx, shortCode).Result()
 	if err == nil {
 		return longURL, true
 	}
 
-	// 🔥 2. If not in Redis → check MongoDB
+	// 2. Check MongoDB
 	var result models.URL
 	err = storage.URLCollection.FindOne(
 		context.Background(),
@@ -45,7 +57,7 @@ func GetLongURL(shortCode string) (string, bool) {
 		return "", false
 	}
 
-	// 🔥 3. Store in Redis for next time
+	// 3. Cache in Redis
 	storage.RedisClient.Set(storage.Ctx, shortCode, result.LongURL, 0)
 
 	return result.LongURL, true

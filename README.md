@@ -4,7 +4,7 @@ A fast, lightweight, and scalable URL shortener service built with Go (Golang). 
 
 ## Features
 
-- **Shorten URLs:** Convert long URLs into a compact, 8-character short code.
+- **Shorten URLs:** Convert long URLs into a compact, 8-character short code using Base62 encoding combined with random padding to ensure unique and varied characters.
 - **Fast Redirections:** Utilizes Redis caching to serve recently accessed short URLs with minimal latency.
 - **Persistent Storage:** Stores all URL mappings in MongoDB.
 - **Cache Fallback Strategy:** On cache miss, retrieves the URL from MongoDB and repopulates the Redis cache.
@@ -14,7 +14,7 @@ A fast, lightweight, and scalable URL shortener service built with Go (Golang). 
 ## Architecture
 
 1. **Client** makes a `POST` request to shorten a URL.
-2. **Service** generates an 8-character short code.
+2. **Service** generates a unique ID using a Redis counter and encodes it into an 8-character short code using Base62 encoding with random padding.
 3. The mapping `(shortCode -> longURL)` is saved into **MongoDB** and cached in **Redis**.
 4. When a **Client** visits the short URL, the service first checks **Redis**. 
    - If found (**Cache Hit**), it redirects immediately.

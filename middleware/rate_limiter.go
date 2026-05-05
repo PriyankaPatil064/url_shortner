@@ -71,7 +71,7 @@ func RateLimiter(next http.Handler) http.Handler {
 
 		bucket, exists := buckets[ip]
 		if !exists {
-			bucket = NewTokenBucket(5, 0) // strict test config
+			bucket = NewTokenBucket(4, 1) // strict test config
 			buckets[ip] = bucket
 		}
 

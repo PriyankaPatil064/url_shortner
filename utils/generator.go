@@ -5,14 +5,31 @@ import (
 	"time"
 )
 
-const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+const base62Chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 
-func GenerateShortCode(length int) string {
+func init() {
 	rand.Seed(time.Now().UnixNano())
+}
 
-	code := make([]byte, length)
-	for i := range code {
-		code[i] = charset[rand.Intn(len(charset))]
+func EncodeBase62(num int64) string {
+	if num == 0 {
+		return string(base62Chars[0])
 	}
-	return string(code)
+
+	base := int64(len(base62Chars))
+	var result []byte
+
+	for num > 0 {
+		remainder := num % base
+		result = append([]byte{base62Chars[remainder]}, result...)
+		num = num / base
+	}
+
+	// 🔥 Pad to 8 characters with random characters
+	for len(result) < 8 {
+		randomChar := base62Chars[rand.Intn(len(base62Chars))]
+		result = append([]byte{randomChar}, result...)
+	}
+
+	return string(result)
 }
