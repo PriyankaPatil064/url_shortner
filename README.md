@@ -1,4 +1,4 @@
-# URL Shortener (url_shortener)
+# URL Shortner (url_shortner)
 
 A fast, lightweight, and scalable URL shortener service built with Go (Golang). It uses **MongoDB** as the primary database for persistent storage and **Redis** as an in-memory cache to ensure rapid redirections.
 
@@ -60,7 +60,7 @@ Follow these steps clearly to get the project running locally:
 Open your terminal and clone the project:
 ```bash
 git clone https://github.com/PriyankaPatil064/url_shortner.git
-cd url_shorterner_m
+cd url_shortener
 ```
 
 ### Step 2: Download dependencies
