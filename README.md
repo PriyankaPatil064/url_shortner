@@ -143,10 +143,16 @@ You can easily test the API endpoints using Postman:
 4. Click **Send**.
 *(Note: Postman automatically follows redirects by default, so you will see the HTML response of the original long URL. You can disable "Automatically follow redirects" in the Postman settings for that request if you want to inspect the `302 Found` response instead.)*
 
+### 3. Viewing Data in MongoDB Compass
+To verify that your URLs are successfully stored in the database:
+1. Open **MongoDB Compass** and connect to `mongodb://localhost:27017`.
+2. Navigate to the `url_shortener` database and the `urls` collection.
+3. **Note:** MongoDB Compass does not auto-refresh. After shortening a new URL, you must click the **Refresh button** (the circular arrow `↻`) in Compass to see the newly inserted document.
+
 ## Project Structure
 
 ```text
-url_shorterner_m/
+url_shortener/
 ├── handlers/      # HTTP handlers (Controller layer)
 │   └── url_handler.go
 ├── middleware/    # HTTP middlewares (e.g., Rate Limiter)
